@@ -7,7 +7,6 @@ PlaygroundPage.current.needsIndefiniteExecution = true
 /* DispatchQueue manages the execution of work items.
    Each work item submitted to a queue is processed on a pool of threads managed by the system. */
 
-
 // QoSClass
 
 // default:         The default quality of service class.
@@ -26,42 +25,67 @@ let queueGlobalDefault = DispatchQueue.global()
 let queueGlobalBackground = DispatchQueue.global(qos: .background)
 let queueSerialHighPriority = DispatchQueue(label: "com.zayatsoleh.queue.serial.priority.high", qos: .userInteractive)
 
+
+
 /* Different queue execution */
 
 queueGlobalDefault.async {
-    print("async code execution on main queue")
+    print(" 1: async code execution on main queue")
 }
 
 queueGlobalDefault.sync {
-    print("sync code execution on main queue")
+    print(" 2: sync code execution on main queue")
 }
 
 queueGlobalBackground.async {
-    print("async time consuming background work is done.")
+    print(" 3: async time consuming background work is done.")
     
     queueMain.async {
-        print("async UI update on main queue.")
+        print(" 4: async UI update on main queue.")
     }
 }
 
-// execute on queue after a delay
+
+
+/* execute on queue after a delay */
 let deadline = DispatchTime.now() + .seconds(2)
 queueGlobalDefault.asyncAfter(deadline: deadline) {
-    print("async code execution on main queue, after 2 seconds.")
+    print(" 5: async code execution on main queue, after 2 seconds.")
 }
 
 sleep(1)
 
-// multiple concurrent calls
+
+
+/* multiple concurrent calls */
+let count: Int = 20
+
 queueConcurrent.async {
-    DispatchQueue.concurrentPerform(iterations: 20) { iteration in
+    DispatchQueue.concurrentPerform(iterations: count) { iteration in
         sleep(1)
-        print("concurrent code execution, iteration \(iteration + 1)")
+        print(" 6: concurrent code execution, iteration \(iteration + 1)")
     }
 }
 // set barrier to wait till concurrent execution is finished
 queueConcurrent.async(flags: .barrier) {
-    print("All 5 concurrent tasks completed")
+    print(" 7: \(count) concurrent tasks completed.")
 }
+
+sleep(5)
+
+
+
+/* inactive queue */
+let attributes: DispatchQueue.Attributes = [.concurrent, .initiallyInactive]
+let inactiveQueue = DispatchQueue(label: "com.com.zayatsoleh.queue.inactive", attributes: attributes)
+
+inactiveQueue.async {
+    print(" 8: async code execution on activated queue")
+}
+
+print(" 9: ...activate the queue ?")
+
+inactiveQueue.activate()
+print("10: work after 'inactiveQueue' activation")
 
 
