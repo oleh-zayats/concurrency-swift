@@ -32,17 +32,34 @@ threadOne.start()
 
 let sleepInterval: TimeInterval = 3
 
+/* Creating thread by subclassing Thread */
+
 final class CustomThread: Thread {
     override func main() {
         print("1: start thread, sleep for \(sleepInterval) seconds")
         Thread.sleep(forTimeInterval: sleepInterval)
-        print("2: wake up, exit thread\n")
+        print("2: wake up, exit thread")
     }
 }
 
 let threadTwo = CustomThread()
 threadTwo.stackSize = 1024 * 16
 threadTwo.start()
+
+
+sleep(UInt32(sleepInterval + 1))
+print("\n")
+
+/* or via closure */
+
+let threadThree = CustomThread {
+    print("1: start thread, sleep for \(sleepInterval) seconds")
+    Thread.sleep(forTimeInterval: sleepInterval)
+    print("2: wake up, exit thread")
+}
+
+threadThree.stackSize = 1024 * 16
+threadThree.start()
 
 
 
