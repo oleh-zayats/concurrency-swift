@@ -69,3 +69,8 @@ operation3.isReady       // Ready for execution?
 operation3.isExecuting   // Executing now?
 operation3.isFinished    // Finished naturally or cancelled?
 operation3.isCancelled   // Manually cancelled?
+
+// queue.cancelAllOperations()
+// operation3.cancel()
+
+queue.isSuspended = true // Suspend or check suspension status
